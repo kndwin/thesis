@@ -1,11 +1,9 @@
-import {
-  createBrowserRouter,
-  type RouteObject,
-} from "react-router-dom";
+import { createBrowserRouter, type RouteObject } from "react-router-dom";
 import { Dashboard, Error } from "~/components";
 
 import { DocumentSection } from "./documents";
-import { HomeSection } from "./home";
+import { EditorSection } from "./editor";
+import { NotesSection } from "./notes";
 
 const routeConfig: RouteObject[] = [
   {
@@ -14,19 +12,24 @@ const routeConfig: RouteObject[] = [
     errorElement: <Error.Dashboard />,
     children: [
       {
-        path: "/home",
-        element: <HomeSection />,
+        path: "/notes",
+        element: <NotesSection />,
         errorElement: <Error />,
       },
       {
-        path: "/documents",
+        path: "/editor",
+        element: <EditorSection />,
+        errorElement: <Error />,
+      },
+      {
+        index: true,
         element: <DocumentSection />,
         errorElement: <Error />,
       },
     ],
   },
-] satisfies object[];
+];
 
 export const router = createBrowserRouter(routeConfig);
 
-export type Pathnames = "/" | "/home" | "/documents"
+export type Pathnames = "/" | "/notes" | "/documents" | "/editor";
