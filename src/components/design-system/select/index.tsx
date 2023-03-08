@@ -86,14 +86,20 @@ const SelectItemChecked = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
 >(({ className, children, ...props }, ref) => (
   <SelectItem ref={ref} {...props}>
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-      <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 text-orange-8" />
-      </SelectPrimitive.ItemIndicator>
-    </span>
-
+    <SelectItemIndicatorChecked />
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectItem>
+));
+
+const SelectItemIndicatorChecked = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ItemIndicator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ItemIndicator>
+>(({ ...props }, ref) => (
+  <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <SelectPrimitive.ItemIndicator {...props} ref={ref}>
+      <Check className="h-4 w-4 text-orange-8" />
+    </SelectPrimitive.ItemIndicator>
+  </span>
 ));
 
 const SelectSeparator = React.forwardRef<
@@ -141,6 +147,7 @@ export const Select = Object.assign(SelectCustom, {
   Item: SelectItem,
   ItemText: SelectPrimitive.ItemText,
   ItemIndicator: SelectPrimitive.ItemIndicator,
+  ItemIndicatorChecked: SelectItemIndicatorChecked,
   ItemChecked: SelectItemChecked,
   Separator: SelectSeparator,
 });

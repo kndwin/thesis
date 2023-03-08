@@ -5,7 +5,7 @@ type RouteError = {
   data: string;
   status: number;
 };
-export const DashboardError = () => {
+export const PageError = () => {
   const error = useRouteError() as RouteError;
   const navigate = useNavigate();
   return (
@@ -44,5 +44,5 @@ export const CommonError = () => {
 };
 
 export const Error = Object.assign(CommonError, {
-  Dashboard: DashboardError,
+  Page: PageError,
 });

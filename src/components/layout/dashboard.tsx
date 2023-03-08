@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import {
   SunIcon,
@@ -14,26 +14,47 @@ import { Text, Button, ScrollArea } from "~/components";
 import { type Pathnames } from "~/routes";
 import { HTMLAttributes, ReactNode, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { styled, VariantPropsOf } from "../variants";
 
 type DashboardProps = {
   disableHeader: boolean;
 };
-export const Dashboard = () => {
-  const [theme] = useTheme();
 
+export const Page = ({
+  children,
+  ...props
+}: { children: ReactNode } & VariantPropsOf<typeof StyledPageContainer>) => {
+  const [theme] = useTheme();
   return (
-    <div className={`flex w-screen h-screen bg-sand-1 ${theme}`}>
+    <StyledPageContainer className={theme} {...props}>
+      {children}
+    </StyledPageContainer>
+  );
+};
+const StyledPageContainer = styled("div", "w-screen h-screen bg-sand-1 flex", {
+  variants: {
+    variant: {
+      dashboard: "flex-row",
+      page: "flex-col",
+    },
+  },
+});
+
+export const Dashboard = () => {
+  return (
+    <Page variant="dashboard">
       <Sidebar />
       <Outlet />
-    </div>
+    </Page>
   );
 };
 
 type Navigation = {
   label: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   pathname: Pathnames;
-  status: "active" | "beta";
+  status?: "active" | "beta";
+  hidden?: boolean;
 }[];
 
 const nav: Navigation = [
@@ -41,7 +62,6 @@ const nav: Navigation = [
     label: "Documents",
     icon: <FileEdit className="text-sand-12 w-full h-full" />,
     pathname: "/",
-    status: "active",
   },
   {
     label: "Notes",
@@ -85,56 +105,75 @@ const Sidebar = () => {
       </div>
       <div className="px-6 py-2 flex flex-col gap-2">
         {nav.map((nav) => (
-          <Button
-            key={nav.label}
-            className={`${
-              pathname === nav.pathname ? "bg-orange-3" : ""
-            } w-full`}
-            variant="text"
-            as={Link}
-            to={nav.pathname}
-          >
-            <div
-              className={`w-4 h-4 flex justify-center ${
-                collapsed ? "items-center w-full" : "items-start"
-              }`}
-            >
-              {nav.icon}
-            </div>
-            {!collapsed && nav.label}
-            {nav.status === "beta" && (
-              <p className="text-xs px-1 rounded bg-orange-4 uppercase">beta</p>
+          <>
+            {!Boolean(nav.hidden) && (
+              <Button
+                key={nav.label}
+                className={`${
+                  pathname === nav.pathname ? "bg-orange-3" : ""
+                } w-full`}
+                variant="text"
+                as={Link}
+                to={nav.pathname}
+              >
+                <div
+                  className={`w-4 h-4 flex justify-center ${
+                    collapsed ? "items-center w-full" : "items-start"
+                  }`}
+                >
+                  {nav.icon}
+                </div>
+                {!collapsed && nav.label}
+                {!collapsed && nav.status === "beta" && (
+                  <p className="text-xs px-1 rounded bg-orange-4 uppercase">
+                    beta
+                  </p>
+                )}
+              </Button>
             )}
-          </Button>
+          </>
         ))}
       </div>
     </aside>
   );
 };
 
+export const StyledHeader = styled(
+  "header",
+  "px-8 h-20 min-h-[5rem] flex items-center justify-between"
+);
+
+type Test = typeof StyledHeader;
+
 const Header = () => {
   const { pathname } = useLocation();
-  const [theme, setTheme] = useTheme();
 
   const pathnameLabel = nav.find((nav) => nav.pathname === pathname)?.label;
 
   return (
-    <header className="px-8 h-20 flex items-center justify-between">
+    <StyledHeader>
       <div>
         <Text size="2xl" className="capitalize">
           {pathnameLabel}
         </Text>
       </div>
       <div className="flex items-center gap-2">
-        <Button
-          size="icon"
-          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-        >
-          {theme === "light" && <MoonIcon className="w-full h-full" />}
-          {theme === "dark" && <SunIcon className="w-full h-full" />}
-        </Button>
+        <ButtonToggleTheme />
       </div>
-    </header>
+    </StyledHeader>
+  );
+};
+
+export const ButtonToggleTheme = () => {
+  const [theme, setTheme] = useTheme();
+  return (
+    <Button
+      size="icon"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+    >
+      {theme === "light" && <MoonIcon className="w-full h-full" />}
+      {theme === "dark" && <SunIcon className="w-full h-full" />}
+    </Button>
   );
 };
 

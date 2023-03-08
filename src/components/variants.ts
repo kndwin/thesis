@@ -263,7 +263,7 @@ export function variantProps<
   };
 }
 
-type VariantsOf<T, V> = T extends VariantsConfig ? V : {};
+type VariantsOf<T, V> = T extends VariantsConfig<any> ? V : {};
 
 type AsProps<T extends ElementType = ElementType> = {
   as?: T;

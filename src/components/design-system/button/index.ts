@@ -3,6 +3,8 @@ import { styled } from "~/components/variants";
 export const Button = styled("button", "inline-flex items-center w-fit", {
   variants: {
     size: {
+      xs: "px-2 h-8 rounded gap-2 text-xs",
+      sm: "px-2 h-8 rounded gap-2 text-sm",
       md: "px-4 h-10 rounded gap-2 font-bold",
       icon: "aspect-square h-8 w-8 p-1.5 rounded",
     },

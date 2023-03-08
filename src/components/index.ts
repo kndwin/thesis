@@ -5,6 +5,7 @@ export * from "./design-system/scroll-area";
 export * from "./design-system/tabs";
 export * from "./design-system/select";
 export * from "./design-system/dropdown-menu";
+export * from "./design-system/text-field";
 
 export * from "./layout/dashboard";
 export * from "./layout/error";
